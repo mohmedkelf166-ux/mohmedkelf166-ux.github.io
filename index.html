@@ -3,167 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHMED TV | Full beIN Pack</title>
+    <title>Travel Pro | دليل سويسرا الشامل</title>
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6215254621154923"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6215254621154923" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --ios-blur: blur(25px);
-            --ios-bg: rgba(255, 255, 255, 0.08);
-            --ios-border: rgba(255, 255, 255, 0.12);
-            --accent: #007aff;
+            --primary: #007aff;
+            --bg-dark: #000000;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.12);
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --blur: blur(25px);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             font-family: 'Readex Pro', sans-serif;
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            background: radial-gradient(circle at top right, #1c2c4c 0%, #000 80%);
-            overflow-x: hidden;
+            background: radial-gradient(circle at 50% 0%, #1a2c4c 0%, #000 100%);
+            scroll-behavior: smooth;
         }
 
-        /* Header */
         header {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            padding: 15px 20px; border-bottom: 0.5px solid var(--ios-border);
-            text-align: center;
-        }
-        .brand-name { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
-        .brand-name span { color: var(--accent); text-shadow: 0 0 15px rgba(0, 122, 255, 0.5); }
-
-        .search-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 10px 15px;
-            display: flex; align-items: center; gap: 10px;
-            border: 0.5px solid var(--ios-border);
-        }
-        .search-container input { background: none; border: none; color: #fff; width: 100%; outline: none; font-family: inherit; }
-
-        /* Container */
-        .container { padding: 140px 15px 120px; max-width: 600px; margin: 0 auto; }
-        .section-label { font-size: 18px; font-weight: 600; margin: 25px 5px 15px; color: rgba(255,255,255,0.6); }
-
-        /* Grid System */
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            background: rgba(0,0,0,0.7); backdrop-filter: var(--blur);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5%; z-index: 9999;
         }
 
-        .channel-card {
-            background: var(--ios-bg);
-            backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
-            border: 1px solid var(--ios-border);
-            border-radius: 22px; padding: 15px;
-            text-align: center; text-decoration: none; color: white;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            display: flex; flex-direction: column; align-items: center;
-            animation: fadeInUp 0.5s ease forwards;
-            overflow: hidden;
-        }
-        
-        /* تنسيق بطاقة الإعلان */
-        .ad-card {
-            min-height: 130px;
-            justify-content: center;
-            grid-column: span 1;
+        .main-wrapper { padding: 120px 5% 50px; max-width: 1000px; margin: 0 auto; }
+
+        /* بطاقة المحتوى */
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            cursor: pointer;
+            display: block;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .channel-card:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-
-        .channel-icon {
-            width: 60px; height: 60px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px; padding: 10px;
-            margin-bottom: 8px; border: 0.5px solid var(--ios-border);
+        .content-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
         }
-        .channel-name { font-size: 12px; font-weight: 500; }
 
-        /* Tab Bar */
-        .tab-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; height: 65px; background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: var(--ios-blur); border-radius: 30px;
-            border: 1px solid var(--ios-border);
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        /* حاوية المقالة المخفية */
+        #swiss-article {
+            display: none; /* مخفية افتراضياً */
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 40px;
+            margin-top: 20px;
+            border: 1px solid var(--primary);
+            animation: slideDown 0.6s ease forwards;
         }
-        .tab-item { color: rgba(255,255,255,0.3); text-decoration: none; text-align: center; font-size: 11px; flex: 1; }
-        .tab-item i { font-size: 24px; display: block; margin-bottom: 4px; }
-        .tab-item.active { color: var(--accent); }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-tag {
+            background: var(--primary); color: white; padding: 5px 15px;
+            border-radius: 50px; font-size: 12px; display: inline-block; margin-bottom: 15px;
+        }
+
+        h2 { font-size: 28px; color: var(--primary); margin-bottom: 20px; }
+        p { font-size: 17px; line-height: 2; color: var(--text-dim); }
+
+        .ad-unit {
+            width: 100%; margin: 40px 0; padding: 20px;
+            border: 1px dashed #444; text-align: center; border-radius: 20px;
+        }
+
+        .btn-close {
+            background: #ff3b30; color: white; border: none;
+            padding: 10px 25px; border-radius: 12px; cursor: pointer;
+            margin-top: 20px; font-family: inherit;
+        }
+
+        footer {
+            background: #050505; padding: 60px 5%;
+            border-top: 1px solid var(--border-color);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-name">AHMED <span>TV</span></div>
-        <div class="search-container">
-            <i class="fas fa-search" style="opacity: 0.3"></i>
-            <input type="text" id="searchInput" placeholder="ابحث عن قناة..." onkeyup="search()">
-        </div>
+        <div class="logo" style="font-size:24px; font-weight:800">TRAVEL <span style="color:var(--primary)">PRO</span></div>
     </header>
 
-    <div class="container">
-        
-        <div class="section-label">إعلان</div>
-        <div class="channels-grid" style="margin-bottom: 20px;">
-            <div class="channel-card ad-card">
-                <ins class="adsbygoogle"
-                     style="display:block;width:100%;height:100%"
-                     data-ad-client="ca-pub-6215254621154923"
-                     data-ad-slot="4559633394"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
+    <div class="main-wrapper">
+
+        <div class="ad-unit">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6215254621154923" data-ad-slot="4559633394" data-ad-format="auto"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
-        <div class="section-label">باقة beIN Sports</div>
-        <div class="channels-grid" id="grid">
-            <a href="go:be1" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 1 Prem</span></a>
-            <a href="go:be2" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 2 Prem</span></a>
-            <a href="go:be3" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 3 Prem</span></a>
-            <a href="go:be4" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 4</span></a>
-            <a href="go:be5" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 5</span></a>
-            <a href="go:be6" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 6</span></a>
-            <a href="go:be7" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 7</span></a>
-            <a href="go:be8" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 8</span></a>
-            <a href="go:be9" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN 9</span></a>
-            <a href="go:news" class="channel-card"><img src="https://i.pinimg.com/originals/20/f8/53/20f853787e15c584b40cb92aee225029.png" class="channel-icon"><span class="channel-name">beIN News</span></a>
+        <div class="content-card" onclick="openArticle()">
+            <span class="category-tag">Destination Guide</span>
+            <h2>دليل السياحة في سويسرا 2026 (اضغط هنا للتفاصيل)</h2>
+            <p>سويسرا ليست مجرد بلد، بل هي لوحة فنية من الجبال والبحيرات. استكشف معنا أفضل النصائح لزيارة هذا البلد الساحر بأفضل التكاليف.</p>
         </div>
+
+        <div id="swiss-article">
+            <h2>المقال الكامل: رحلتك إلى قلب جبال الألب</h2>
+            <p>سويسرا هي موطن لبعض من أجمل المناظر الطبيعية في العالم. من قمة "ماترهورن" الشهيرة إلى شوارع زيورخ الراقية. </p>
+            <p><b>أفضل المدن للزيارة:</b></p>
+            <ul>
+                <li>جنيف: مدينة السلام والجمال.</li>
+                <li>إنترلاكن: عاصمة المغامرات السويسرية.</li>
+                <li>لوزيرن: المدينة التاريخية بجانب البحيرة.</li>
+            </ul>
+            <p style="margin-top:20px;"><b>نصائح ذهبية:</b> احرص على شراء بطاقة "Swiss Travel Pass" للتنقل غير المحدود بالقطارات والحافلات والقوارب، فهي توفر عليك مئات الدولارات.</p>
+            
+            <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+            
+            <div dir="ltr" style="text-align:left; font-family:sans-serif; color:#aaa;">
+                <h2>Full Guide: Your Trip to the Heart of the Alps</h2>
+                <p>Switzerland is home to some of the most beautiful landscapes in the world. From the iconic Matterhorn peak to the sophisticated streets of Zurich.</p>
+                <p><b>Top Cities to Visit:</b> Geneva, Interlaken, and Lucerne. Don't forget to visit the Swiss National Park for an authentic nature experience.</p>
+            </div>
+
+            <button class="btn-close" onclick="closeArticle()">إغلاق المقالة</button>
+        </div>
+
+        <div class="content-card">
+            <span class="category-tag">Travel Security</span>
+            <h2>نصائح الأمان والحماية للمسافرين</h2>
+            <p>تعرف على كيفية حماية بياناتك وأموالك أثناء التنقل بين الدول الأوروبية في عام 2026.</p>
+        </div>
+
     </div>
 
-    <nav class="tab-bar">
-        <a href="#" class="tab-item active"><i class="fas fa-home"></i><span>الرئيسية</span></a>
-        <a href="live.html" class="tab-item"><i class="fas fa-play-circle"></i><span>مباشر</span></a>
-        <a href="go:movies" class="tab-item"><i class="fas fa-film"></i><span>أفلام</span></a>
-    </nav>
-
     <script>
-        function search() {
-            let q = document.getElementById('searchInput').value.toLowerCase();
-            // البحث فقط داخل شبكة القنوات وليس الإعلان
-            document.querySelectorAll('#grid .channel-card').forEach(c => {
-                c.style.display = c.innerText.toLowerCase().includes(q) ? "flex" : "none";
-            });
+        function openArticle() {
+            document.getElementById('swiss-article').style.display = 'block';
+            window.scrollTo(0, document.getElementById('swiss-article').offsetTop - 100);
+        }
+        function closeArticle() {
+            document.getElementById('swiss-article').style.display = 'none';
         }
     </script>
-</body>
-</html>
-        }
-    </script>
+
+    <footer>
+        <div class="footer-col">
+            <h4>Support & Info</h4>
+            <p>Privacy Policy | Terms | Contact Us</p>
+            <p>© 2026 Travel Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
