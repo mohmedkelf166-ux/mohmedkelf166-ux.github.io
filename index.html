@@ -3,168 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Pro | دليل سويسرا الشامل</title>
+    <title>Travel Pro | مدونة السفر والإعلانات</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6215254621154923" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #007aff;
-            --bg-dark: #000000;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border-color: rgba(255, 255, 255, 0.12);
-            --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.6);
-            --blur: blur(25px);
+            --bg-dark: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-dim: #b0b0b0;
         }
 
         body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Readex Pro', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #1a2c4c 0%, #000 100%);
-            scroll-behavior: smooth;
+            margin: 0; background-color: var(--bg-dark);
+            color: #fff; font-family: 'Readex Pro', sans-serif;
+            background: radial-gradient(circle at top right, #1a2c4c 0%, #050505 50%);
+        }
+
+        /* تنسيق حاويات الإعلانات */
+        .ad-container {
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed #333;
+            text-align: center;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .ad-label {
+            display: block;
+            font-size: 10px;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-            background: rgba(0,0,0,0.7); backdrop-filter: var(--blur);
+            position: fixed; top: 0; width: 100%; height: 70px;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 9999;
+            padding: 0 5%; z-index: 1000; box-sizing: border-box;
         }
 
-        .main-wrapper { padding: 120px 5% 50px; max-width: 1000px; margin: 0 auto; }
+        .blog-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            padding: 100px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        /* بطاقة المحتوى */
-        .content-card {
+        .blog-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 30px;
-            padding: 40px;
-            margin-bottom: 40px;
-            cursor: pointer;
-            display: block;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 24px;
+            margin-bottom: 30px;
+            overflow: hidden;
         }
 
-        .content-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255,255,255,0.08);
-            border-color: var(--primary);
+        .post-content { padding: 25px; }
+
+        .sidebar-widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
         }
 
-        /* حاوية المقالة المخفية */
-        #swiss-article {
-            display: none; /* مخفية افتراضياً */
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            padding: 40px;
-            margin-top: 20px;
-            border: 1px solid var(--primary);
-            animation: slideDown 0.6s ease forwards;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .category-tag {
-            background: var(--primary); color: white; padding: 5px 15px;
-            border-radius: 50px; font-size: 12px; display: inline-block; margin-bottom: 15px;
-        }
-
-        h2 { font-size: 28px; color: var(--primary); margin-bottom: 20px; }
-        p { font-size: 17px; line-height: 2; color: var(--text-dim); }
-
-        .ad-unit {
-            width: 100%; margin: 40px 0; padding: 20px;
-            border: 1px dashed #444; text-align: center; border-radius: 20px;
-        }
-
-        .btn-close {
-            background: #ff3b30; color: white; border: none;
-            padding: 10px 25px; border-radius: 12px; cursor: pointer;
-            margin-top: 20px; font-family: inherit;
-        }
-
-        footer {
-            background: #050505; padding: 60px 5%;
-            border-top: 1px solid var(--border-color);
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;
+        @media (max-width: 900px) {
+            .blog-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" style="font-size:24px; font-weight:800">TRAVEL <span style="color:var(--primary)">PRO</span></div>
+        <div class="logo" style="font-size:22px; font-weight:800">TRAVEL <span style="color:var(--primary)">PRO</span></div>
     </header>
 
-    <div class="main-wrapper">
-
-        <div class="ad-unit">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6215254621154923" data-ad-slot="4559633394" data-ad-format="auto"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-
-        <div class="content-card" onclick="openArticle()">
-            <span class="category-tag">Destination Guide</span>
-            <h2>دليل السياحة في سويسرا 2026 (اضغط هنا للتفاصيل)</h2>
-            <p>سويسرا ليست مجرد بلد، بل هي لوحة فنية من الجبال والبحيرات. استكشف معنا أفضل النصائح لزيارة هذا البلد الساحر بأفضل التكاليف.</p>
-        </div>
-
-        <div id="swiss-article">
-            <h2>المقال الكامل: رحلتك إلى قلب جبال الألب</h2>
-            <p>سويسرا هي موطن لبعض من أجمل المناظر الطبيعية في العالم. من قمة "ماترهورن" الشهيرة إلى شوارع زيورخ الراقية. </p>
-            <p><b>أفضل المدن للزيارة:</b></p>
-            <ul>
-                <li>جنيف: مدينة السلام والجمال.</li>
-                <li>إنترلاكن: عاصمة المغامرات السويسرية.</li>
-                <li>لوزيرن: المدينة التاريخية بجانب البحيرة.</li>
-            </ul>
-            <p style="margin-top:20px;"><b>نصائح ذهبية:</b> احرص على شراء بطاقة "Swiss Travel Pass" للتنقل غير المحدود بالقطارات والحافلات والقوارب، فهي توفر عليك مئات الدولارات.</p>
-            
-            <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
-            
-            <div dir="ltr" style="text-align:left; font-family:sans-serif; color:#aaa;">
-                <h2>Full Guide: Your Trip to the Heart of the Alps</h2>
-                <p>Switzerland is home to some of the most beautiful landscapes in the world. From the iconic Matterhorn peak to the sophisticated streets of Zurich.</p>
-                <p><b>Top Cities to Visit:</b> Geneva, Interlaken, and Lucerne. Don't forget to visit the Swiss National Park for an authentic nature experience.</p>
+    <div class="blog-container">
+        
+        <main>
+            <div class="ad-container">
+                <span class="ad-label">إعلان ممول</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6215254621154923"
+                     data-ad-slot="4559633394"
+                     data-ad-format="horizontal"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
 
-            <button class="btn-close" onclick="closeArticle()">إغلاق المقالة</button>
-        </div>
+            <article class="blog-card">
+                <div style="height:200px; background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div class="post-content">
+                    <h2>السياحة في فرنسا</h2>
+                    <p>اكتشف باريس وجمال الريف الفرنسي...</p>
+                </div>
+            </article>
 
-        <div class="content-card">
-            <span class="category-tag">Travel Security</span>
-            <h2>نصائح الأمان والحماية للمسافرين</h2>
-            <p>تعرف على كيفية حماية بياناتك وأموالك أثناء التنقل بين الدول الأوروبية في عام 2026.</p>
-        </div>
+            <div class="ad-container">
+                <span class="ad-label">إعلان</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-6215254621154923"
+                     data-ad-slot="4559633394"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
 
+            <article class="blog-card">
+                <div style="height:200px; background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div class="post-content">
+                    <h2>روعة سويسرا</h2>
+                    <p>دليل التنقل بالقطارات بين جبال الألب...</p>
+                </div>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-widget" style="position: sticky; top: 90px;">
+                <span class="ad-label">إعلان جانبي</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6215254621154923"
+                     data-ad-slot="4559633394"
+                     data-ad-format="rectangle"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3>تصنيفات تهمك</h3>
+                <p>تأشيرات شنغن</p>
+                <p>نصائح توفير</p>
+            </div>
+        </aside>
     </div>
 
-    <script>
-        function openArticle() {
-            document.getElementById('swiss-article').style.display = 'block';
-            window.scrollTo(0, document.getElementById('swiss-article').offsetTop - 100);
-        }
-        function closeArticle() {
-            document.getElementById('swiss-article').style.display = 'none';
-        }
-    </script>
-
-    <footer>
-        <div class="footer-col">
-            <h4>Support & Info</h4>
-            <p>Privacy Policy | Terms | Contact Us</p>
-            <p>© 2026 Travel Pro. All rights reserved.</p>
-        </div>
+    <footer style="text-align: center; padding: 30px; color: #555; border-top: 1px solid #111;">
+        <p>© 2026 Travel Pro</p>
     </footer>
 
 </body>
