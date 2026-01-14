@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Pro | مدونة السفر والإعلانات</title>
+    <title>Travel Pro | دليل السفر العالمي الشامل</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6215254621154923" crossorigin="anonymous"></script>
 
@@ -14,33 +14,15 @@
         :root {
             --primary: #007aff;
             --bg-dark: #050505;
-            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-bg: rgba(255, 255, 255, 0.05);
             --border-color: rgba(255, 255, 255, 0.1);
-            --text-dim: #b0b0b0;
         }
 
         body {
             margin: 0; background-color: var(--bg-dark);
             color: #fff; font-family: 'Readex Pro', sans-serif;
             background: radial-gradient(circle at top right, #1a2c4c 0%, #050505 50%);
-        }
-
-        /* تنسيق حاويات الإعلانات */
-        .ad-container {
-            margin: 20px 0;
-            padding: 10px;
-            background: rgba(255,255,255,0.02);
-            border: 1px dashed #333;
-            text-align: center;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        .ad-label {
-            display: block;
-            font-size: 10px;
-            color: #555;
-            margin-bottom: 5px;
-            text-transform: uppercase;
+            line-height: 1.8;
         }
 
         header {
@@ -64,11 +46,14 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             overflow: hidden;
+            transition: 0.3s;
         }
 
-        .post-content { padding: 25px; }
+        .post-content { padding: 30px; }
+        .post-content h2 { color: var(--primary); margin-top: 0; font-size: 24px; }
+        .post-content p { color: #ddd; font-size: 15px; margin-bottom: 15px; }
 
         .sidebar-widget {
             background: var(--card-bg);
@@ -77,6 +62,14 @@
             padding: 20px;
             margin-bottom: 30px;
         }
+
+        footer {
+            text-align: center; padding: 40px; 
+            border-top: 1px solid var(--border-color);
+            background: #000;
+        }
+
+        footer a { color: #888; text-decoration: none; margin: 0 10px; font-size: 14px; }
 
         @media (max-width: 900px) {
             .blog-container { grid-template-columns: 1fr; }
@@ -92,67 +85,83 @@
     <div class="blog-container">
         
         <main>
-            <div class="ad-container">
-                <span class="ad-label">إعلان ممول</span>
+            <article class="blog-card">
+                <div style="height:250px; background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div class="post-content">
+                    <h2>السياحة في فرنسا: عاصمة النور والجمال</h2>
+                    <p>تظل فرنسا الوجهة السياحية الأكثر جذباً في العالم. باريس ليست فقط برج إيفل، بل هي متاحف اللوفر وأورسي، وشوارع الشانزلزيه الفاخرة. ننصح المسافرين باستكشاف مدينة ليون عاصمة الطهي، والاستمتاع بشواطئ الريفيرا الفرنسية في الصيف.</p>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div style="height:250px; background: url('https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div class="post-content">
+                    <h2>مصر: مهد الحضارات وجمال النيل</h2>
+                    <p>زيارة مصر هي رحلة عبر الزمن. من أهرامات الجيزة العظيمة إلى معابد الأقصر وأسوان، تقدم مصر تجربة تاريخية لا مثيل لها. لمحبي الاسترخاء، توفر مدن البحر الأحمر مثل شرم الشيخ والغردقة أفضل تجارب الغوص في العالم بفضل الشعاب المرجانية النادرة.</p>
+                </div>
+            </article>
+
+            <div style="margin: 20px 0; text-align: center;">
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-client="ca-pub-6215254621154923"
                      data-ad-slot="4559633394"
-                     data-ad-format="horizontal"
+                     data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
 
             <article class="blog-card">
-                <div style="height:200px; background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div style="height:250px; background: url('https://images.unsplash.com/photo-1586724230449-440a13ee2705?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
                 <div class="post-content">
-                    <h2>السياحة في فرنسا</h2>
-                    <p>اكتشف باريس وجمال الريف الفرنسي...</p>
+                    <h2>المملكة العربية السعودية: وجهة المستقبل</h2>
+                    <p>تشهد السعودية تحولاً سياحياً كبيراً، حيث تفتح أبوابها للعالم لاستكشاف "العلا" وتاريخها العريق، ومدينة "نيوم" المستقبلية. بالإضافة إلى السياحة الدينية في مكة والمدينة، أصبحت الرياض وجدة مراكز عالمية للترفيه والفعاليات الثقافية والرياضية.</p>
                 </div>
             </article>
 
-            <div class="ad-container">
-                <span class="ad-label">إعلان</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"
-                     data-ad-client="ca-pub-6215254621154923"
-                     data-ad-slot="4559633394"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
+            <article class="blog-card">
+                <div style="height:250px; background: url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div class="post-content">
+                    <h2>تركيا: جسر بين الشرق والغرب</h2>
+                    <p>تجمع تركيا بين عبق التاريخ العثماني والحداثة الأوروبية. إسطنبول بجمال البوسفور ومساجدها التاريخية تعد بداية مثالية، تليها رحلة إلى كابادوكيا للاستمتاع بالمناطيد الهوائية، ثم التوجه إلى سواحل أنطاليا للاستمتاع بالطبيعة الخلابة والمياه الفيروزية.</p>
+                </div>
+            </article>
 
             <article class="blog-card">
-                <div style="height:200px; background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                <div style="height:250px; background: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
                 <div class="post-content">
-                    <h2>روعة سويسرا</h2>
-                    <p>دليل التنقل بالقطارات بين جبال الألب...</p>
+                    <h2>اليابان: كوكب من التكنولوجيا والتقاليد</h2>
+                    <p>اليابان هي الوجهة التي تجد فيها ناطحات السحاب بجانب المعابد الهادئة. طوكيو تقدم تجربة تكنولوجية مذهلة، بينما تحتفظ كيوتو بسحر اليابان القديم. لا تنسَ تجربة القطار الرصاصة والاستمتاع بموسم تفتح أزهار الكرز (الساكورا) في فصل الربيع.</p>
                 </div>
             </article>
         </main>
 
         <aside class="sidebar">
-            <div class="sidebar-widget" style="position: sticky; top: 90px;">
-                <span class="ad-label">إعلان جانبي</span>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-6215254621154923"
-                     data-ad-slot="4559633394"
-                     data-ad-format="rectangle"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
             <div class="sidebar-widget">
-                <h3>تصنيفات تهمك</h3>
-                <p>تأشيرات شنغن</p>
-                <p>نصائح توفير</p>
+                <h3 style="color:var(--primary)">أهم الوجهات</h3>
+                <p>• دبي، الإمارات</p>
+                <p>• لندن، بريطانيا</p>
+                <p>• روما، إيطاليا</p>
+                <p>• المالديف</p>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3>نصائح سريعة</h3>
+                <p style="font-size: 13px; color: #aaa;">تأكد من مراجعة صلاحية جواز سفرك قبل السفر بـ 6 أشهر على الأقل.</p>
             </div>
         </aside>
     </div>
 
-    <footer style="text-align: center; padding: 30px; color: #555; border-top: 1px solid #111;">
-        <p>© 2026 Travel Pro</p>
+    <footer>
+        <div style="margin-bottom: 20px;">
+            <a href="#">الرئيسية</a>
+            <a href="#">من نحن</a>
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">اتصل بنا</a>
+        </div>
+        <p style="color: #444; font-size: 12px;">© 2026 Travel Pro - بوابة السفر العالمية</p>
     </footer>
 
 </body>
 </html>
+
