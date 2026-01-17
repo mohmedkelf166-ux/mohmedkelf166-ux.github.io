@@ -1,179 +1,205 @@
+<?php
+error_reporting(0);
+ini_set('display_errors', 0);
+
+$baseUrl = "https://mycima.host";
+
+// دالة جلب البيانات من ماي سيما
+function fetchMyCima($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36');
+    $html = curl_exec($ch);
+    curl_close($ch);
+    return $html;
+}
+
+// استخراج العناصر
+function getGridItems($html) {
+    $items = [];
+    $blocks = explode('<div class="GridItem">', $html);
+    array_shift($blocks); 
+
+    foreach ($blocks as $block) {
+        if (preg_match('/<a href="([^"]+)" title="([^"]+)">/u', $block, $link)) {
+            $img = '';
+            if (preg_match('/url\((.*?)\)/', $block, $im)) $img = trim($im[1], '\'" ');
+            elseif (preg_match('/data-bg="([^"]+)"/', $block, $im)) $img = $im[1];
+            
+            $quality = ''; 
+            if (preg_match('/<em class="Quality">([^<]+)<\/em>/', $block, $q)) $quality = $q[1];
+            
+            $items[] = [
+                'title' => $link[2],
+                'link' => 'details.php?view=' . urlencode($link[1]),
+                'img' => $img,
+                'quality' => $quality
+            ];
+        }
+    }
+    return $items;
+}
+
+// منطق البحث والصفحات
+$searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
+$page = isset($_GET['p']) ? intval($_GET['p']) : 1;
+
+if ($searchQuery) {
+    $targetUrl = "$baseUrl/filtering/?keywords=" . urlencode($searchQuery);
+} else {
+    $targetUrl = ($page > 1) ? "$baseUrl/page/$page/" : "$baseUrl/";
+}
+
+$htmlContent = fetchMyCima($targetUrl);
+$movies = getGridItems($htmlContent);
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Pro | دليل السفر العالمي ونصائح السياحة الشاملة</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHMED TV | MyCima Edition</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ios-blur: blur(35px);
+      --ios-bg: rgba(255, 255, 255, 0.08);
+      --ios-border: rgba(255, 255, 255, 0.15);
+      --accent: #007aff;
+      --danger: #ff3b30;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Readex Pro', sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      background: radial-gradient(circle at top right, #1a2a3a 0%, #000 100%);
+      overflow-x: hidden;
+    }
+
+    /* الهيدر المحسن */
+    header {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: var(--ios-blur);
+      padding: 10px 20px 15px; border-bottom: 0.5px solid var(--ios-border);
+    }
+    .brand-container { text-align: center; padding-bottom: 12px; }
+    .brand-name { font-size: 24px; font-weight: 700; letter-spacing: -1px; }
+    .brand-name span { color: var(--accent); }
+
+    .search-container {
+      display: flex; align-items: center; background: rgba(255, 255, 255, 0.12);
+      border-radius: 14px; padding: 8px 15px; border: 0.5px solid var(--ios-border);
+    }
+    .search-container form { width: 100%; display: flex; align-items: center; }
+    .search-container input { background: none; border: none; color: white; width: 100%; outline: none; font-family: inherit; font-size: 15px; }
+
+    .app-container { padding: 140px 20px 130px; max-width: 600px; margin: 0 auto; }
+    .section-label { font-size: 18px; font-weight: 600; margin: 25px 5px 15px; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.9); }
+    .section-label i { font-size: 16px; color: var(--accent); }
+
+    /* بطاقات الأفلام الجديدة بنمط iOS */
+    .glass-card {
+      background: var(--ios-bg); backdrop-filter: var(--ios-blur);
+      border: 1px solid var(--ios-border); border-radius: 22px;
+      padding: 12px; margin-bottom: 12px; display: flex; align-items: center;
+      text-decoration: none; color: white; transition: 0.3s ease;
+    }
+    .glass-card:active { transform: scale(0.97); background: rgba(255,255,255,0.15); }
     
-    <meta name="description" content="اكتشف أفضل الوجهات السياحية في العالم، نصائح السفر، وأدلة شاملة لزيارة فرنسا، مصر، السعودية، تركيا واليابان مع Travel Pro.">
-    <meta name="keywords" content="سياحة، سفر، حجز فنادق، نصائح سفر، باريس، مصر، دبي">
-    <link rel="canonical" href="https://yourdomain.com/">
+    .poster-wrapper { 
+        width: 65px; height: 90px; 
+        border-radius: 14px; 
+        overflow: hidden; 
+        margin-left: 15px; 
+        flex-shrink: 0;
+        border: 0.5px solid var(--ios-border);
+    }
+    .poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6215254621154923" crossorigin="anonymous"></script>
+    .card-content { flex-grow: 1; }
+    .card-content h3 { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-content p { font-size: 11px; color: var(--accent); font-weight: 500; }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #007aff;
-            --bg-dark: #050505;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
+    .quality-tag { font-size: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
 
-        body {
-            margin: 0; background-color: var(--bg-dark);
-            color: #fff; font-family: 'Readex Pro', sans-serif;
-            background: radial-gradient(circle at top right, #1a2c4c 0%, #050505 50%);
-            line-height: 1.8;
-        }
+    /* الترقيم */
+    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+    .page-btn { background: var(--ios-bg); border: 1px solid var(--ios-border); color: white; padding: 8px 16px; border-radius: 12px; text-decoration: none; font-size: 14px; }
 
-        header {
-            position: fixed; top: 0; width: 100%; height: 70px;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1000; box-sizing: border-box;
-        }
-
-        .blog-container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 30px;
-            padding: 120px 5% 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .blog-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            margin-bottom: 40px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .post-content { padding: 30px; }
-        .post-content h1, .post-content h2 { color: var(--primary); margin-top: 0; }
-        .post-content p { color: #ddd; font-size: 16px; margin-bottom: 15px; text-align: justify; }
-
-        .sidebar-widget {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        /* تنسيق قسم الحقوق */
-        .copyright-area {
-            background: #000;
-            padding: 30px 5%;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .footer-links { margin-bottom: 20px; }
-        .footer-links a { color: #888; text-decoration: none; margin: 0 15px; font-size: 14px; transition: 0.3s; }
-        .footer-links a:hover { color: var(--primary); }
-
-        .rights-text {
-            font-size: 13px;
-            color: #555;
-            letter-spacing: 0.5px;
-        }
-
-        @media (max-width: 900px) {
-            .blog-container { grid-template-columns: 1fr; }
-        }
-    </style>
+    .tab-bar {
+      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+      width: 92%; height: 70px; background: rgba(25, 25, 25, 0.65);
+      backdrop-filter: var(--ios-blur); border-radius: 35px; border: 1px solid var(--ios-border);
+      display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+    }
+    .tab-item { color: rgba(255,255,255,0.3); text-decoration: none; text-align: center; font-size: 10px; }
+    .tab-item i { font-size: 24px; display: block; margin-bottom: 2px; }
+    .tab-item.active { color: var(--accent); }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo" style="font-size:22px; font-weight:800">TRAVEL <span style="color:var(--primary)">PRO</span></div>
-        <nav style="display: flex; gap: 20px;">
-            <a href="#" style="color: white; text-decoration: none; font-size: 14px;">الرئيسية</a>
-            <a href="#blog" style="color: white; text-decoration: none; font-size: 14px;">المدونة</a>
-        </nav>
-    </header>
+  <header>
+    <div class="brand-container"><div class="brand-name">AHMED <span>TV</span></div></div>
+    <div class="search-container">
+      <form action="" method="GET">
+        <i class="fas fa-search" style="color: rgba(255,255,255,0.3); margin-left: 10px;"></i>
+        <input type="text" name="search" placeholder="ابحث في ماي سيما..." value="<?php echo htmlspecialchars($searchQuery); ?>">
+      </form>
+    </div>
+  </header>
 
-    <div class="blog-container">
-        
-        <main id="blog">
-            <article class="blog-card">
-                <div style="height:300px; background: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
-                <div class="post-content">
-                    <h1>دليل السياحة في فرنسا: عاصمة النور والجمال</h1>
-                    <p>تظل فرنسا الوجهة السياحية الأكثر جذباً في العالم. باريس ليست فقط برج إيفل، بل هي متاحف اللوفر وأورسي، وشوارع الشانزلزيه الفاخرة. ننصح المسافرين باستكشاف مدينة ليون عاصمة الطهي، والاستمتاع بشواطئ الريفيرا الفرنسية في الصيف.</p>
-                </div>
-            </article>
-
-            <div style="margin: 20px 0; text-align: center;">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-6215254621154923"
-                     data-ad-slot="4559633394"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
-            <article class="blog-card">
-                <div style="height:300px; background: url('https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
-                <div class="post-content">
-                    <h2>مصر: مهد الحضارات وجمال النيل الخالد</h2>
-                    <p>زيارة مصر هي رحلة عبر الزمن. من أهرامات الجيزة العظيمة إلى معابد الأقصر وأسوان، تقدم مصر تجربة تاريخية لا مثيل لها. لمحبي الاسترخاء، توفر مدن البحر الأحمر مثل شرم الشيخ والغردقة أفضل تجارب الغوص في العالم بفضل الشعاب المرجانية النادرة.</p>
-                </div>
-            </article>
-
-            <article class="blog-card">
-                <div class="post-content">
-                    <h2>أهم 5 نصائح قبل السفر في 2026</h2>
-                    <p>1. تأكد من صلاحية جواز السفر لأكثر من 6 أشهر.<br>
-                       2. قم بشراء تأمين سفر يغطي الحالات الطارئة.<br>
-                       3. احجز تذاكر الطيران قبل الموعد بـ 45 يوماً على الأقل.<br>
-                       4. تعلم بعض الجمل الأساسية بلغة البلد الوجهة.<br>
-                       5. احتفظ بنسخة إلكترونية من جميع وثائقك المهمة.</p>
-                </div>
-            </article>
-        </main>
-
-        <aside class="sidebar">
-            <div class="sidebar-widget">
-                <h3 style="color:var(--primary)">أهم الوجهات</h3>
-                <p>• دبي، الإمارات العربية المتحدة</p>
-                <p>• لندن، المملكة المتحدة</p>
-                <p>• روما، إيطاليا</p>
-                <p>• جزيرة المالديف</p>
-            </div>
-
-            <div style="text-align: center;">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-6215254621154923"
-                     data-ad-slot="4559633394"
-                     data-ad-format="rectangle"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-        </aside>
+  <main class="app-container">
+    <div class="section-label">
+        <i class="fas fa-play-circle"></i> 
+        <?php echo $searchQuery ? "نتائج البحث عن: $searchQuery" : "أحدث الإضافات"; ?>
     </div>
 
-    <footer class="copyright-area">
-        <div class="footer-links">
-            <a href="#">الرئيسية</a>
-            <a href="#">سياسة الخصوصية</a>
-            <a href="#">اتفاقية الاستخدام</a>
-            <a href="#">من نحن</a>
-            <a href="#">اتصل بنا</a>
-        </div>
-        <div class="rights-text">
-            <p>جميع الحقوق محفوظة © 2026 لدى <strong>TRAVEL PRO</strong></p>
-            <p style="margin-top: 5px; opacity: 0.5;">يمنع إعادة نسخ أو نشر المحتوى دون إذن مسبق.</p>
-        </div>
-    </footer>
+    <?php if (empty($movies)): ?>
+        <div style="text-align: center; padding: 50px; opacity: 0.5;">لا توجد نتائج حالياً..</div>
+    <?php else: ?>
+        <?php foreach ($movies as $item): ?>
+        <a href="<?php echo $item['link']; ?>" class="glass-card">
+          <div class="poster-wrapper">
+              <img src="<?php echo $item['img']; ?>" loading="lazy">
+          </div>
+          <div class="card-content">
+              <h3><?php echo $item['title']; ?></h3>
+              <p>مشاهدة الآن</p>
+              <?php if($item['quality']): ?>
+                <span class="quality-tag"><?php echo $item['quality']; ?></span>
+              <?php endif; ?>
+          </div>
+          <i class="fas fa-chevron-left" style="opacity: 0.2; font-size: 12px;"></i>
+        </a>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if(!$searchQuery): ?>
+    <div class="pagination">
+        <?php if($page > 1): ?>
+            <a href="?p=<?php echo $page-1; ?>" class="page-btn">السابق</a>
+        <?php endif; ?>
+        <a href="?p=<?php echo $page+1; ?>" class="page-btn">التالي</a>
+    </div>
+    <?php endif; ?>
+  </main>
+
+  <nav class="tab-bar">
+    <a href="?" class="tab-item active"><i class="fas fa-film"></i><span>الأفلام</span></a>
+    <a href="#" class="tab-item"><i class="fas fa-tv"></i><span>المسلسلات</span></a>
+    <a href="#" class="tab-item"><i class="fas fa-th-large"></i><span>الأقسام</span></a>
+  </nav>
 
 </body>
 </html>
