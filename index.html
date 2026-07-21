@@ -1,5 +1,311 @@
-WebView myWebView = findViewById(R.id.webview);
-myWebView.getSettings().setJavaScriptEnabled(true);
-myWebView.getSettings().setMediaPlaybackRequiresUserGesture(false); // لتشغيل الفيديو تلقائياً
-myWebView.loadUrl("file:///android_asset/AHMED.html");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AHMED TV | IPTV Player</title>
+    
+    <!-- FontAwesome & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- HLS.js Player Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
+    <style>
+        :root {
+            --bg-dark: #0a0e14;
+            --card-bg: #161c24;
+            --border-color: #2d3748;
+            --accent: #3b82f6;
+            --success: #34d399;
+            --text-gray: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Readex Pro', sans-serif; }
+        body { background-color: var(--bg-dark); color: #fff; padding-bottom: 80px; overflow-x: hidden; }
+
+        /* الهيدر العلوي */
+        .header {
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(22, 28, 36, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .brand { font-size: 20px; font-weight: 700; color: #fff; }
+        .brand span { color: var(--accent); }
+        .status-badge {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--success);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        /* مشغل الفيديو */
+        .player-wrapper {
+            width: 100%;
+            background: #000;
+            position: sticky; top: 60px; z-index: 90;
+            border-bottom: 2px solid var(--accent);
+            display: none;
+        }
+        video { width: 100%; max-height: 250px; outline: none; }
+        .playing-title {
+            padding: 8px 15px; font-size: 13px; color: var(--text-gray);
+            background: #111; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* صندوق البحث */
+        .search-section { padding: 15px 20px 5px; }
+        .search-box {
+            background: var(--card-bg);
+            padding: 10px 15px; border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .search-box input {
+            background: transparent; border: none; color: white;
+            width: 100%; outline: none; font-size: 14px;
+        }
+
+        /* شبكة العرض */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px; padding: 15px 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px; padding: 8px; text-align: center;
+            border: 1px solid var(--border-color);
+            cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .card:active { transform: scale(0.95); }
+        .card:hover { border-color: var(--accent); }
+        .card img {
+            width: 100%; aspect-ratio: 1/1; object-fit: contain;
+            border-radius: 8px; background: rgba(0,0,0,0.2); margin-bottom: 6px;
+        }
+        .card .title { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* شاشة الحساب */
+        .account-view { padding: 20px; display: none; }
+        .account-card {
+            background: var(--card-bg); border-radius: 16px;
+            padding: 20px; border: 1px solid var(--border-color);
+        }
+        .account-item {
+            display: flex; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+        .account-item:last-child { border-bottom: none; }
+
+        /* الشريط السفلي */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 65px; background: rgba(10, 14, 20, 0.95);
+            backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid var(--border-color); z-index: 1000;
+        }
+        .nav-item {
+            color: var(--text-gray); text-decoration: none;
+            text-align: center; font-size: 11px; cursor: pointer; flex: 1;
+        }
+        .nav-item i { font-size: 18px; margin-bottom: 3px; display: block; }
+        .nav-item.active { color: var(--accent); }
+
+        /* الحقوق */
+        .footer-credits {
+            text-align: center; padding: 15px;
+            color: var(--text-gray); font-size: 12px; margin-top: 20px;
+        }
+
+        /* الرسائل والتنبيهات */
+        .loading { text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر -->
+    <div class="header">
+        <div class="brand">AHMED <span>TV</span></div>
+        <div class="status-badge">● متصل</div>
+    </div>
+
+    <!-- المشغل -->
+    <div class="player-wrapper" id="playerWrapper">
+        <video id="mainPlayer" controls autoplay></video>
+        <div class="playing-title">
+            <span id="currentTitle">اختر قناة للتشغيل</span>
+            <i class="fas fa-times" style="cursor:pointer;" onclick="closePlayer()"></i>
+        </div>
+    </div>
+
+    <!-- البحث -->
+    <div class="search-section" id="searchSection">
+        <div class="search-box">
+            <i class="fas fa-search" style="color: var(--text-gray);"></i>
+            <input type="text" id="searchInput" placeholder="بحث عن قناة أو فيلم..." oninput="filterContent()">
+        </div>
+    </div>
+
+    <!-- شبكة المحتوى -->
+    <div class="grid" id="contentGrid">
+        <div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري تحميل القنوات...</div>
+    </div>
+
+    <!-- واجهة الحساب -->
+    <div class="account-view" id="accountView">
+        <div class="account-card">
+            <h3 style="margin-bottom: 15px; color: var(--accent);"><i class="fas fa-user-circle"></i> معلومات الاشتراك</h3>
+            <div class="account-item"><span>السيرفر:</span> <strong>luxipgold.xyz</strong></div>
+            <div class="account-item"><span>اليوزر:</span> <strong>15034094901029</strong></div>
+            <div class="account-item"><span>تاريخ الانتهاء:</span> <strong style="color: var(--success);">2027-01-30</strong></div>
+            <div class="account-item"><span>الاتصالات المتاحة:</span> <strong>1</strong></div>
+            <div class="account-item"><span>الحالة:</span> <strong style="color: var(--success);">نشط (Active)</strong></div>
+        </div>
+    </div>
+
+    <!-- الحقوق -->
+    <div class="footer-credits">
+        تم التطوير بواسطة <strong>بلاك كود</strong>
+    </div>
+
+    <!-- الشريط السفلي -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('live', this)"><i class="fas fa-tv"></i>مباشر</div>
+        <div class="nav-item" onclick="switchTab('movies', this)"><i class="fas fa-film"></i>أفلام</div>
+        <div class="nav-item" onclick="switchTab('series', this)"><i class="fas fa-th-large"></i>مسلسلات</div>
+        <div class="nav-item" onclick="switchTab('account', this)"><i class="fas fa-user-shield"></i>حسابي</div>
+    </div>
+
+    <script>
+        // بيانات الاعتماد
+        const HOST = "http://luxipgold.xyz:8080";
+        const USER = "15034094901029";
+        const PASS = "18800196589372";
+
+        let currentData = [];
+        let hlsPlayer = null;
+
+        // تهيئة المشغل
+        const videoElement = document.getElementById('mainPlayer');
+
+        async function loadContent(action) {
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>';
+            
+            const url = `${HOST}/player_api.php?username=${USER}&password=${PASS}&action=${action}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                currentData = data;
+                renderItems(data, action);
+            } catch (err) {
+                grid.innerHTML = `<div class="loading" style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> تعذر الاتصال بالسيرفر. يرجى التأكد من تشغيل بيئة تدعم CORS أو الاستضافة.</div>`;
+            }
+        }
+
+        function renderItems(items, type) {
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+
+            if(!items || items.length === 0) {
+                grid.innerHTML = '<div class="loading">لا توجد عناصر لعرضها.</div>';
+                return;
+            }
+
+            // عرض أول 30 عنصر للسرعة والاستجابة
+            items.slice(0, 30).forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const icon = item.stream_icon || item.cover || 'https://via.placeholder.com/100/161c24/ffffff?text=TV';
+                const name = item.name || item.title;
+                const id = item.stream_id || item.series_id;
+
+                card.innerHTML = `
+                    <img src="${icon}" onerror="this.src='https://via.placeholder.com/100/161c24/ffffff?text=TV'" loading="lazy">
+                    <div class="title">${name}</div>
+                `;
+
+                card.onclick = () => playMedia(id, name, type);
+                grid.appendChild(card);
+            });
+        }
+
+        function playMedia(id, name, type) {
+            const wrapper = document.getElementById('playerWrapper');
+            const title = document.getElementById('currentTitle');
+            wrapper.style.display = 'block';
+            title.innerText = name;
+
+            let streamUrl = "";
+            if (type === 'get_live_streams') {
+                streamUrl = `${HOST}/live/${USER}/${PASS}/${id}.m3u8`;
+            } else if (type === 'get_vod_streams') {
+                streamUrl = `${HOST}/movie/${USER}/${PASS}/${id}.mp4`;
+            }
+
+            if (Hls.isSupported() && streamUrl.endsWith('.m3u8')) {
+                if (hlsPlayer) hlsPlayer.destroy();
+                hlsPlayer = new Hls();
+                hlsPlayer.loadSource(streamUrl);
+                hlsPlayer.attachMedia(videoElement);
+                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => videoElement.play());
+            } else {
+                videoElement.src = streamUrl;
+                videoElement.play();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closePlayer() {
+            document.getElementById('playerWrapper').style.display = 'none';
+            videoElement.pause();
+        }
+
+        function switchTab(tab, element) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            const grid = document.getElementById('contentGrid');
+            const account = document.getElementById('accountView');
+            const searchSection = document.getElementById('searchSection');
+
+            if (tab === 'account') {
+                grid.style.display = 'none';
+                searchSection.style.display = 'none';
+                account.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                searchSection.style.display = 'block';
+                account.style.display = 'none';
+
+                if (tab === 'live') loadContent('get_live_streams');
+                if (tab === 'movies') loadContent('get_vod_streams');
+                if (tab === 'series') loadContent('get_series');
+            }
+        }
+
+        function filterContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = currentData.filter(item => {
+                const name = item.name || item.title || "";
+                return name.toLowerCase().includes(query);
+            });
+            renderItems(filtered, 'get_live_streams');
+        }
+
+        // جلب البث المباشر فور التحميل
+        loadContent('get_live_streams');
+    </script>
+</body>
+</html>
